@@ -1,18 +1,76 @@
-function BotSpecs({ bot, onEnlist, onBack }) {
+// This shows detailed info when a bot is selected
+// It appears instead of the collection view
+
+function BotSpecs({ bot, onBack, onEnlist }) {
+    // Calculate some derived values
+    const totalPower = bot.health + bot.damage + bot.armor;
+    const powerPercentage = Math.round((totalPower / 300) * 100);
+  
     return (
       <div className="bot-specs">
-        <button onClick={onBack}>Back to List</button>
-        <div className="detailed-view">
-          <img src={bot.avatar_url} alt={bot.name} />
-          <h2>{bot.name}</h2>
-          <p><strong>Catchphrase:</strong> {bot.catchphrase}</p>
-          <div className="specs-stats">
-            <p>Health: {bot.health}</p>
-            <p>Damage: {bot.damage}</p>
-            <p>Armor: {bot.armor}</p>
-            <p>Class: {bot.bot_class}</p>
+        {/* Back Button */}
+        <button 
+          className="back-button"
+          onClick={onBack}
+        >
+          ← Back to All Bots
+        </button>
+  
+        {/* Main Bot Info */}
+        <div className="specs-container">
+          <div className="specs-image">
+            <img src={bot.avatar_url} alt={bot.name} />
           </div>
-          <button onClick={() => onEnlist(bot)}>Enlist</button>
+  
+          <div className="specs-details">
+            <h2>{bot.name}</h2>
+            <p className="class-badge">{bot.bot_class}</p>
+            
+            <blockquote>"{bot.catchphrase}"</blockquote>
+            
+            {/* Stats Visualization */}
+            <div className="stats-visual">
+              <div className="stat-bar">
+                <label>Health: {bot.health}</label>
+                <div 
+                  className="health-bar" 
+                  style={{ width: `${bot.health}%` }}
+                ></div>
+              </div>
+              
+              <div className="stat-bar">
+                <label>Damage: {bot.damage}</label>
+                <div 
+                  className="damage-bar" 
+                  style={{ width: `${bot.damage}%` }}
+                ></div>
+              </div>
+              
+              <div className="stat-bar">
+                <label>Armor: {bot.armor}</label>
+                <div 
+                  className="armor-bar" 
+                  style={{ width: `${bot.armor}%` }}
+                ></div>
+              </div>
+            </div>
+  
+            {/* Power Summary */}
+            <div className="power-summary">
+              <p>Total Power: {totalPower}/300</p>
+              <div className="power-meter">
+                <div style={{ width: `${powerPercentage}%` }}></div>
+              </div>
+            </div>
+  
+            {/* Action Button */}
+            <button 
+              className="enlist-button"
+              onClick={() => onEnlist(bot)}
+            >
+              Enlist in Army
+            </button>
+          </div>
         </div>
       </div>
     );

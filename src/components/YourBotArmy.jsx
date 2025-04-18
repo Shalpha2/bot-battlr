@@ -1,31 +1,31 @@
-import BotCard from './BotCard';
-
-function YourBotArmy({ armyBots, onRelease, onDischarge }) {
-  return (
-    <div className="your-bot-army">
-      <h2>Your Bot Army</h2>
-      {armyBots.length === 0 ? (
-        <p>No bots enlisted yet. Click on bots to add them to your army!</p>
-      ) : (
-        <div className="army-list">
-          {armyBots.map(bot => (
-            <div className="army-bot-card" key={bot.id}>
-              <BotCard 
-                bot={bot}
-                onClick={() => onRelease(bot.id)}
-              />
-              <button 
-                className="discharge-btn"
-                onClick={() => onDischarge(bot.id)}
-              >
-                x
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default YourBotArmy;
+// This component shows the user's selected bots
+function YourBotArmy({ army, onRelease, onDischarge }) {
+    return (
+      <section className="your-army">
+        <h2>Your Bot Army</h2>
+        
+        {army.length === 0 ? (
+          <p>Your army is empty. Click on bots to add them!</p>
+        ) : (
+          <div className="army-bots">
+            {army.map(bot => (
+              <div key={bot.id} className="army-bot">
+                <div onClick={() => onRelease(bot.id)}>
+                  <img src={bot.avatar_url} alt={bot.name} />
+                  <h4>{bot.name}</h4>
+                </div>
+                <button 
+                  className="delete-btn"
+                  onClick={() => onDischarge(bot.id)}
+                >
+                  Delete Forever
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    );
+  }
+  
+  export default YourBotArmy;
