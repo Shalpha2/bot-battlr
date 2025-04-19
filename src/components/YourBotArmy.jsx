@@ -1,31 +1,24 @@
-// This component shows the user's selected bots
+import React from "react";
+import BotCard from "./BotCard";
+
 function YourBotArmy({ army, onRelease, onDischarge }) {
-    return (
-      <section className="your-army">
-        <h2>Your Bot Army</h2>
-        
-        {army.length === 0 ? (
-          <p>Your army is empty. Click on bots to add them!</p>
-        ) : (
-          <div className="army-bots">
-            {army.map(bot => (
-              <div key={bot.id} className="army-bot">
-                <div onClick={() => onRelease(bot.id)}>
-                  <img src={bot.avatar_url} alt={bot.name} />
-                  <h4>{bot.name}</h4>
-                </div>
-                <button 
-                  className="delete-btn"
-                  onClick={() => onDischarge(bot.id)}
-                >
-                  Delete Forever
-                </button>
-              </div>
-            ))}
+  return (
+    <div className="my-5">
+      <h2 className="text-center my-4">Your Bot Army</h2>
+      <div className="row">
+        {army.map((bot) => (
+          <div key={bot.id} className="col-md-3 mb-4">
+            <BotCard
+              bot={bot}
+              onClick={() => onRelease(bot)}
+              onDischarge={() => onDischarge(bot)}
+              showDischarge
+            />
           </div>
-        )}
-      </section>
-    );
-  }
-  
-  export default YourBotArmy;
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default YourBotArmy;

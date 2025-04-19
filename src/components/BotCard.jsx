@@ -1,59 +1,48 @@
-// This is a reusable card component to display bot info
-// It's used in both the collection and army lists
+import React from "react";
 
-function BotCard({ bot, onClick, showDelete }) {
-    // Destructure the bot props for easier use
-    const { 
-      id, 
-      name, 
-      health, 
-      damage, 
-      armor, 
-      bot_class, 
-      catchphrase, 
-      avatar_url 
-    } = bot;
-  
-    return (
-      <div className="bot-card" onClick={onClick}>
-        {/* Bot Image */}
-        <div className="bot-image-container">
-          <img 
-            src={avatar_url} 
-            alt={name} 
-            className="bot-image"
-          />
+function BotCard({ bot, onClick, onDischarge, showDischarge = false }) {
+  const { name, avatar_url, health, damage, armor, bot_class, catchphrase } = bot;
+
+  const getClassIcon = () => {
+    const icons = {
+      Support: "🛠️",
+      Medic: "💉",
+      Assault: "⚔️",
+      Defender: "🛡️",
+      Witch: "🪄",
+      Captain: "⭐",
+    };
+    return icons[bot_class] || "🤖";
+  };
+
+  return (
+    <div className="card h-100 shadow-sm" onClick={onClick} style={{ cursor: "pointer" }}>
+      <img src={avatar_url} className="card-img-top" alt={name} />
+      <div className="card-body">
+        <h5 className="card-title d-flex justify-content-between align-items-center">
+          {name}
+          <span>{getClassIcon()}</span>
+        </h5>
+        <p className="card-text">{catchphrase}</p>
+        <div className="d-flex justify-content-between text-muted">
+          <span>❤️ {health}</span>
+          <span>⚡ {damage}</span>
+          <span>🛡️ {armor}</span>
         </div>
-        
-        {/* Bot Info */}
-        <div className="bot-info">
-          <h3 className="bot-name">{name}</h3>
-          <p className="bot-catchphrase">"{catchphrase}"</p>
-          
-          {/* Stats Row */}
-          <div className="bot-stats">
-            <span title="Health">❤️ {health}</span>
-            <span title="Damage">⚔️ {damage}</span>
-            <span title="Armor">🛡️ {armor}</span>
-          </div>
-          
-          <p className="bot-class">Class: {bot_class}</p>
-        </div>
-  
-        {/* Delete Button (only shown in army) */}
-        {showDelete && (
-          <button 
-            className="delete-btn"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevents the card click from firing
-              onClick(id); // Uses onClick for delete in this case
-            }}
-          >
-            X
-          </button>
-        )}
       </div>
-    );
-  }
-  
-  export default BotCard;
+      {showDischarge && (
+        <button
+          className="btn btn-sm btn-danger position-absolute top-0 end-0 m-2"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDischarge();
+          }}
+        >
+          ❌
+        </button>
+      )}
+    </div>
+  );
+}
+
+export default BotCard;

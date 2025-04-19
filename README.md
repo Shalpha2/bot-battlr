@@ -70,11 +70,6 @@ DELETE	  /bots/:id	  Delete a specific bot
 
 🌟 Advanced Deliverables
 ✅ Show a detailed BotSpecs view
-
-✅ Sort bots by health, damage, or armor using SortBar
-
-✅ Filter bots by class
-
 ✅ Restrict army to one bot per class
 
 🛠️ Technologies Used

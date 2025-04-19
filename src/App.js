@@ -1,78 +1,68 @@
-// Import React and necessary components
-import React, { useState, useEffect } from 'react';
-// We'll put our components in a separate folder to keep things organized
-import BotCollection from './components/BotCollection';
-import YourBotArmy from './components/YourBotArmy';
+import './App.css';
+import React, { useEffect, useState } from "react";
+import BotCollection from "./components/BotCollection";
+import YourBotArmy from "./components/YourBotArmy";
 
 function App() {
-  // State for all bots and bots in army
   const [bots, setBots] = useState([]);
-  const [armyBots, setArmyBots] = useState([]);
+  const [army, setArmy] = useState([]);
 
-  // Fetch bots when component first loads
+  async function getBots() {
+    try {
+      const response = await fetch('http://localhost:8001/bots');
+      const data = await response.json();
+      setBots(data);
+    } catch (error) {
+      console.log("Oops, couldn't fetch bots:", error);
+    }
+  }
+
   useEffect(() => {
-    const fetchBots = async () => {
-      try {
-        const response = await fetch('http://localhost:8001/bots');
-        const data = await response.json();
-        setBots(data);
-      } catch (error) {
-        console.log("Oops, couldn't fetch bots:", error);
-      }
-    };
-    
-    fetchBots();
+    getBots();
   }, []);
 
-  // Add a bot to army if not already there
-  const handleAddToArmy = (botToAdd) => {
-    const alreadyInArmy = armyBots.some(bot => bot.id === botToAdd.id);
-    if (!alreadyInArmy) {
-      setArmyBots([...armyBots, botToAdd]);
+  const handleEnlist = (bot) => {
+    if (!army.find((b) => b.id === bot.id)) {
+      setArmy([...army, bot]);
     }
   };
 
-  // Remove bot from army
-  const handleRelease = (botId) => {
-    setArmyBots(armyBots.filter(bot => bot.id !== botId));
+  const handleRelease = (bot) => {
+    setArmy(army.filter((b) => b.id !== bot.id));
   };
 
-  // Delete bot forever from backend and state
-  const handleDischarge = async (botId) => {
+  async function handleDischarge(bot) {
     try {
-      await fetch(`http://localhost:8001/bots/${botId}`, {
-        method: 'DELETE'
+      const response = await fetch(`http://localhost:8001/bots/${bot.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
       });
-      // Remove from both army and all bots
-      setArmyBots(armyBots.filter(bot => bot.id !== botId));
-      setBots(bots.filter(bot => bot.id !== botId));
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the bot");
+      }
+
+      const deletedBot = await response.json();
+      setArmy((prev) => prev.filter((b) => b.id !== deletedBot.id));
+      setBots((prev) => prev.filter((b) => b.id !== deletedBot.id));
     } catch (error) {
-      console.log("Couldn't discharge bot:", error);
+      console.error("Error discharging bot:", error);
+      
     }
-  };
+  }
 
   return (
-    <div className="app">
-      <header>
-        <h1>Bot Battlr</h1>
-        <p>Build your bot army!</p>
-      </header>
-      
-      <main>
-        <YourBotArmy 
-          army={armyBots} 
-          onRelease={handleRelease}
-          onDischarge={handleDischarge}
-        />
-        
-        <BotCollection 
-          bots={bots} 
-          onAddToArmy={handleAddToArmy}
-        />
-      </main>
-    </div>
+    <>
+      <div style={{height: "150px" }}></div>
+      <div className="container mt-4">
+        <YourBotArmy army={army} onRelease={handleRelease} onDischarge={handleDischarge} />
+        <BotCollection bots={bots} onEnlist={handleEnlist} />
+      </div>
+    </>
   );
 }
 
 export default App;
-
