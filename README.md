@@ -12,11 +12,6 @@ Bot Battlr is a dynamic React web application where users can browse, manage, an
 
 🔍 View detailed specifications of each bot
 
-🧮 Sort bots by health, damage, or armor
-
-🧪 Filter bots by class (e.g., Support, Medic, etc.)
-
-🔒 Limit army to one bot per class (Advanced)
 
 📦 Installation & Setup
 1. Clone the repository
