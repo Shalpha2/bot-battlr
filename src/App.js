@@ -9,7 +9,7 @@ function App() {
 
   async function getBots() {
     try {
-      const response = await fetch('http://localhost:8001/bots');
+      const response = await fetch('https://bot-battlr-20.onrender.com/bots');
       const data = await response.json();
       setBots(data);
     } catch (error) {
@@ -33,7 +33,7 @@ function App() {
 
   async function handleDischarge(bot) {
     try {
-      const response = await fetch(`http://localhost:8001/bots/${bot.id}`, {
+      const response = await fetch(`https://bot-battlr-20.onrender.com/${bot.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
